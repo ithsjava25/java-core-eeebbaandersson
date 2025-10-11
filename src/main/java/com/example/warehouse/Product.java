@@ -3,7 +3,7 @@ package com.example.warehouse;
 import java.math.BigDecimal;
 import java.util.UUID;
 
- //Sätta  name,category och price som finaal fält?
+ //Sätta  name,category och price som final fält?
 public abstract class Product {
     private UUID id;
     private String name;
@@ -14,6 +14,7 @@ public abstract class Product {
      public Product(String name, Category category, BigDecimal price) {
          //ID:t genereras internt
          this.id = UUID.randomUUID();
+
          //Validera inkommande argument först (Fail-Fast).
          if (name == null || name.isEmpty()){
              throw new IllegalArgumentException("Product name cannot be null or empty.");
@@ -25,7 +26,7 @@ public abstract class Product {
              throw new IllegalArgumentException("Category must be provided.");
          }
 
-         //Initiera fält
+         //Initierar fält
          this.name = name;
          this.category = category;
          this.price = price;

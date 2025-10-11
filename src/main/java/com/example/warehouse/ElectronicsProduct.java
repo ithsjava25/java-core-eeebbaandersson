@@ -6,6 +6,12 @@ public class ElectronicsProduct extends Product implements Shippable {
     private int warrantyMonths;
     private BigDecimal weight;
 
+    //Konstruktor som tar alla nödvändiga fält
+    public ElectronicsProduct(String name, Category category, BigDecimal price, int warrantyMonths, BigDecimal weight) {
+        //Anrop till basklassens konstruktor
+        super(name, category, price);
+    }
+
     public void validateWarranty() {
         if (warrantyMonths <= 0) {
             throw new IllegalArgumentException("Warranty months cannot be negative.");
@@ -13,20 +19,22 @@ public class ElectronicsProduct extends Product implements Shippable {
 
     }
 
+    //Todo: Lägg till korrekt format Electronics: Laptop, Warranty: 24 months
     @Override
     public String productDetails() {
+        //Returnerar vår produktinformation
         return "";
     }
 
+    //Todo: Lägg till Shipping rule: base 79, add 49 if weight > 5.0 kg
     @Override
     public void calculateShippingCost() {
+        //Addera logik för fraktkostnad här
 
     }
 
     @Override
     public Object weight() {
-        return null;
+        return this.weight;
     }
-
-
 }

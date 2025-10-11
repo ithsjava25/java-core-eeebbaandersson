@@ -20,36 +20,35 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     }
 
     public void validateWeight(){
-
-
         if (weight == null || weight.compareTo(BigDecimal.ZERO) <= 0){
             throw new IllegalArgumentException("Weight cannot be negative.");
         }
 
-
+        //Todo: Lägg till validering för expirationDate!
     }
+
 
     @Override
     public LocalDate expirationDate() {
-        return null;
+        return this.expirationDate;
     }
 
+    //Todo: Lägg till korrekt format "Food: Milk, Expires: 2025-12-24"
     @Override
     public String productDetails() {
+        //Returnerar vår produktinformation
         return "";
     }
 
+    //Todo: Lägg till Shipping rule: cost = weight * 50
     @Override
     public void calculateShippingCost() {
+        //Addera logik för fraktkostnad här
 
     }
 
     @Override
     public Object weight() {
-        return null;
+        return this.weight;
     }
-
-
-
-
 }

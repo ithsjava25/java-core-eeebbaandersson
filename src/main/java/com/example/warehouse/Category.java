@@ -13,9 +13,11 @@ public class Category {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be null or empty");
         }
-
         return new Category(name);
     }
+
+    //Todo: Fix --> Normalize name with initial capital letter (e.g., "fruit" -> "Fruit").
+    //Todo: Cache/flyweight: return the same instance for the same normalized name.
 
     @Override
     public boolean equals(Object o) {

@@ -1,7 +1,6 @@
 package com.example.warehouse;
 
 public interface Shippable {
-    public void calculateShippingCost();
-
+    void calculateShippingCost();
     Object weight();
 }
