@@ -3,13 +3,15 @@ package com.example.warehouse;
 import java.math.BigDecimal;
 
 public class ElectronicsProduct extends Product implements Shippable {
-    private int warrantyMonths;
-    private BigDecimal weight;
+    private final int warrantyMonths;
+    private final BigDecimal weight;
 
     //Konstruktor som tar alla nödvändiga fält
     public ElectronicsProduct(String name, Category category, BigDecimal price, int warrantyMonths, BigDecimal weight) {
-        //Anrop till basklassens konstruktor
+        //Anrop till basklassens konstruktor/måste ske först!
         super(name, category, price);
+        this.warrantyMonths = warrantyMonths;
+        this.weight = weight;
     }
 
     public void validateWarranty() {

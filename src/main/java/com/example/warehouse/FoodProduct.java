@@ -2,17 +2,17 @@ package com.example.warehouse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class FoodProduct extends Product implements Perishable, Shippable {
     private final LocalDate expirationDate;
     private final BigDecimal weight;
 
     //Konstruktor som tar alla nödvändiga fält
-    public FoodProduct (String name, Category category, BigDecimal price, LocalDate expirationDate, BigDecimal weight ){
+    public FoodProduct (UUID id, String name, Category category, BigDecimal price, LocalDate expirationDate, BigDecimal weight){
 
-        //Anrop till basklassens konstruktor
+        //Anrop till basklassens konstruktor/måste ske först!
         super(name, category, price);
-
         this.expirationDate = expirationDate;
         this.weight = weight;
         validateWeight();
@@ -26,7 +26,6 @@ public class FoodProduct extends Product implements Perishable, Shippable {
 
         //Todo: Lägg till validering för expirationDate!
     }
-
 
     @Override
     public LocalDate expirationDate() {

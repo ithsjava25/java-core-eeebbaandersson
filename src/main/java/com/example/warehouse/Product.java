@@ -5,9 +5,9 @@ import java.util.UUID;
 
  //Sätta  name,category och price som final fält?
 public abstract class Product {
-    private UUID id;
-    private String name;
-    private Category category;
+    private final UUID id;
+    private final String name;
+    private final Category category;
     private BigDecimal price;
 
 
@@ -32,23 +32,24 @@ public abstract class Product {
          this.price = price;
      }
 
-     public UUID getId() {
+     public UUID id() {
          return id;
      }
 
-     public String getName() {
+     public String name() {
          return name;
      }
 
-     public Category getCategory() {
+     public Category category() {
          return category;
      }
 
-     public BigDecimal getPrice() {
+     public BigDecimal price() {
          return price;
      }
 
-     public void setPrice(BigDecimal price) {
+     //Set-metod
+     public void price(BigDecimal price) {
          this.price = price;
      }
 

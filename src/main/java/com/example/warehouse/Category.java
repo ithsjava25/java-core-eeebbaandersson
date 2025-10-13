@@ -9,6 +9,7 @@ public class Category {
         this.name = name;
     }
 
+   // dela upp if-saten och lägga till kontroll av empty/blank => "Category name can't be blank"
     public static Category of(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Category name cannot be null or empty");
