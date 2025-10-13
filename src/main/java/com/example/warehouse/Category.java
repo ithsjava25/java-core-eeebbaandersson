@@ -9,10 +9,12 @@ public class Category {
         this.name = name;
     }
 
-   // dela upp if-saten och lägga till kontroll av empty/blank => "Category name can't be blank"
     public static Category of(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Category name cannot be null or empty");
+        if (name == null) {
+            throw new IllegalArgumentException("Category name can't be null");
+        }
+        if (name.isBlank()){
+            throw new IllegalArgumentException("Category name can't be blank");
         }
         return new Category(name);
     }
@@ -33,8 +35,7 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "name='" + name + '\'' +
-                '}';
+        return "Category: " +
+                "name: " + name;
     }
 }

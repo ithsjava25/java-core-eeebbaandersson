@@ -1,16 +1,53 @@
 package com.example.warehouse;
 
-import java.util.List;
+import java.util.*;
 
 public class Warehouse {
+    private static final Map<String, Warehouse> warehouse = new HashMap<>();
 
+    private final String name;
 
-    //Senast adderad, kolla upp logiken bakom!
+    private Warehouse (String name){
+        this.name = name;
+    }
+
+    // getInstance(String name) returns the same instance per unique name
+    public static Warehouse getInstance(String name) {
+        synchronized (warehouse) {
+
+            Warehouse instance = warehouse.get(name);
+            if (instance == null) {
+                instance = new Warehouse(name);
+                warehouse.put(name, instance);
+            }
+            return instance;
+        }
+    }
+
+    //addProduct(Product): throw IllegalArgumentException("Product cannot be null.") if null
+
+    //getProducts(): returns an unmodifiable copy
     public List<Product> getProducts() {
         return List.of();
     }
+
+    //getProductById(UUID): return Optional
+    public Optional<Product> getProductById(UUID id) {
+        //Addera korrekt logik här
+        return Optional.empty();
+    }
+
+    //shippableProducts(): return List from stored products
+    public List<Shippable> shippableProducts() {
+        return List.of();
+    }
+
+    //updateProductPrice(UUID, BigDecimal): when not found, throw NoSuchElementException("Product not found with id: ")
+    //Also track changed products in getChangedProducts()
+
+    //expiredProducts(): return List that are expired
+
+    //remove(UUID): remove the matching product if present
+
 }
 
-//Singleton per name--> "Singleton per nyckel"
-
-//Todo: Förstå innebörd/logik och skapa saknade metoder.

@@ -12,7 +12,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     public FoodProduct (UUID id, String name, Category category, BigDecimal price, LocalDate expirationDate, BigDecimal weight){
 
         //Anrop till basklassens konstruktor/måste ske först!
-        super(name, category, price);
+        super(id, name, category, price);
         this.expirationDate = expirationDate;
         this.weight = weight;
         validateWeight();
@@ -24,7 +24,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
             throw new IllegalArgumentException("Weight cannot be negative.");
         }
 
-        //Todo: Lägg till validering för expirationDate!
+        //Todo: Lägg till validering för expirationDate?
     }
 
     @Override
@@ -32,22 +32,23 @@ public class FoodProduct extends Product implements Perishable, Shippable {
         return this.expirationDate;
     }
 
-    //Todo: Lägg till korrekt format "Food: Milk, Expires: 2025-12-24"
     @Override
     public String productDetails() {
-        //Returnerar vår produktinformation
-        return "";
+        String productName = name();
+        LocalDate  expirationDate = expirationDate();
+        return "Food: " + productName + ", Expiration date: " + expirationDate;
     }
 
     //Todo: Lägg till Shipping rule: cost = weight * 50
     @Override
-    public void calculateShippingCost() {
-        //Addera logik för fraktkostnad här
+    public BigDecimal calculateShippingCost() {
+        //Se över fraktlogiken här!
+        return weight.multiply(BigDecimal.valueOf(50));
 
     }
 
     @Override
-    public Object weight() {
-        return this.weight;
+    public double weight() {
+        return weight.doubleValue();
     }
 }

@@ -11,17 +11,23 @@ public abstract class Product {
     private BigDecimal price;
 
 
-     public Product(String name, Category category, BigDecimal price) {
+     public Product(UUID id, String name, Category category, BigDecimal price) {
          //ID:t genereras internt
          this.id = UUID.randomUUID();
 
          //Validera inkommande argument först (Fail-Fast).
          if (name == null || name.isEmpty()){
-             throw new IllegalArgumentException("Product name cannot be null or empty.");
+             throw new IllegalArgumentException("Product name cannot be null");
          }
+
+         if (name.isBlank()){
+             throw new IllegalArgumentException("Product name cannot be blank.");
+         }
+
          if (price == null || price.compareTo(BigDecimal.ZERO) < 0){
              throw new IllegalArgumentException("Price cannot be null or negative.");
          }
+
          if (category == null){
              throw new IllegalArgumentException("Category must be provided.");
          }

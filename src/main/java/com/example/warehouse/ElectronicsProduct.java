@@ -1,42 +1,45 @@
 package com.example.warehouse;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ElectronicsProduct extends Product implements Shippable {
     private final int warrantyMonths;
     private final BigDecimal weight;
 
     //Konstruktor som tar alla nödvändiga fält
-    public ElectronicsProduct(String name, Category category, BigDecimal price, int warrantyMonths, BigDecimal weight) {
+    public ElectronicsProduct(UUID id, String name, Category category,
+                              BigDecimal price, int warrantyMonths, BigDecimal weight) {
         //Anrop till basklassens konstruktor/måste ske först!
-        super(name, category, price);
+        super(id, name, category, price);
         this.warrantyMonths = warrantyMonths;
         this.weight = weight;
+        validateWarranty();
     }
 
     public void validateWarranty() {
         if (warrantyMonths <= 0) {
             throw new IllegalArgumentException("Warranty months cannot be negative.");
         }
-
     }
 
-    //Todo: Lägg till korrekt format Electronics: Laptop, Warranty: 24 months
+
     @Override
     public String productDetails() {
-        //Returnerar vår produktinformation
-        return "";
+        String productName = name();
+        int warrant = this.warrantyMonths;
+        return "Electronics: " + productName + ", Warranty: " + warrant + "months";
     }
 
     //Todo: Lägg till Shipping rule: base 79, add 49 if weight > 5.0 kg
     @Override
-    public void calculateShippingCost() {
+    public BigDecimal calculateShippingCost() {
         //Addera logik för fraktkostnad här
-
+        return null;
     }
 
     @Override
-    public Object weight() {
-        return this.weight;
+    public double weight() {
+        return weight.doubleValue();
     }
 }
