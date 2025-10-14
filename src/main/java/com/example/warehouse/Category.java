@@ -38,4 +38,9 @@ public class Category {
         return "Category: " +
                 "name: " + name;
     }
+
+    //Senast adderad, se över om verkligen behövs?
+    public boolean getName() {
+        return this.name.equals(name);
+    }
 }

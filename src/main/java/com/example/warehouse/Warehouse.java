@@ -24,7 +24,13 @@ public class Warehouse {
         }
     }
 
+    //Todo: Senast skapad, se över!!
     //addProduct(Product): throw IllegalArgumentException("Product cannot be null.") if null
+    public void addProduct(Product product) {
+        if (product == null){
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+    }
 
     //getProducts(): returns an unmodifiable copy
     public List<Product> getProducts() {
@@ -49,5 +55,8 @@ public class Warehouse {
 
     //remove(UUID): remove the matching product if present
 
+    //Ensure Warehouse.clearProducts() is called in tests; do not share state between tests
+    public void clearProducts() {
+    }
 }
 

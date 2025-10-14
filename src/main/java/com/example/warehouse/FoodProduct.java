@@ -39,7 +39,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
         return "Food: " + productName + ", Expiration date: " + expirationDate;
     }
 
-    //Todo: Lägg till Shipping rule: cost = weight * 50
+    //Todo: Shipping rule: cost = weight * 50
     @Override
     public BigDecimal calculateShippingCost() {
         //Se över fraktlogiken här!
