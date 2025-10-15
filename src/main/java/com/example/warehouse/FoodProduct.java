@@ -36,7 +36,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     public String productDetails() {
         String productName = name();
         LocalDate  expirationDate = expirationDate();
-        return "Food: " + productName + ", Expiration date: " + expirationDate;
+        return "Food: " + productName + ", Expires: " + expirationDate;
     }
 
     //Todo: Shipping rule: cost = weight * 50

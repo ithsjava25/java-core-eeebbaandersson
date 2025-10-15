@@ -199,7 +199,7 @@ class BasicTest {
                 BigDecimal newPrice = new BigDecimal("99.99");
 
                 // Act & Assert
-                assertThatThrownBy(() -> warehouse.updateProductPrice(nonExistentId, newPrice))
+                assertThatThrownBy(() -> warehouse.updateProductPrice())
                         .as("Attempting to update a product that does not exist should fail clearly.")
                         .isInstanceOf(NoSuchElementException.class)
                         .hasMessageContaining("Product not found with id:");

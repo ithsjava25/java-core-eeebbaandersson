@@ -16,16 +16,16 @@ public abstract class Product {
          this.id = UUID.randomUUID();
 
          //Validera inkommande argument först (Fail-Fast).
-         if (name == null || name.isEmpty()){
-             throw new IllegalArgumentException("Product name cannot be null");
+         if (name == null ){
+             throw new IllegalArgumentException("Product name cannot be null.");
          }
 
          if (name.isBlank()){
              throw new IllegalArgumentException("Product name cannot be blank.");
          }
 
-         if (price == null || price.compareTo(BigDecimal.ZERO) < 0){
-             throw new IllegalArgumentException("Price cannot be null or negative.");
+         if (price.compareTo(BigDecimal.ZERO) < 0){
+             throw new IllegalArgumentException("Price cannot be negative.");
          }
 
          if (category == null){
@@ -38,7 +38,7 @@ public abstract class Product {
          this.price = price;
      }
 
-     public UUID id() {
+     public UUID uuid() {
          return id;
      }
 
@@ -61,6 +61,7 @@ public abstract class Product {
 
      //Abstrakt metod: Saknar kropp och måste implementeras!
      public abstract String productDetails();
+
  }
 
 

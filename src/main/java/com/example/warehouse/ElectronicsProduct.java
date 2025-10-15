@@ -26,7 +26,7 @@ public class ElectronicsProduct extends Product implements Shippable {
     @Override
     public String productDetails() {
         String productName = name();
-        return "Electronics: " + productName + ", Warranty: " + this.warrantyMonths + "months";
+        return "Electronics: " + productName + ", Warranty: " + this.warrantyMonths + " months";
     }
 
     //Todo: Lägg till Shipping rule: base 79, add 49 if weight > 5.0 kg

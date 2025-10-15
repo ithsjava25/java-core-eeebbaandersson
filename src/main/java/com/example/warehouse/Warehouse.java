@@ -1,5 +1,6 @@
 package com.example.warehouse;
 
+import java.security.Key;
 import java.util.*;
 
 public class Warehouse {
@@ -38,7 +39,8 @@ public class Warehouse {
     }
 
     //getProductById(UUID): return Optional
-    public Optional<Product> getProductById(UUID id) {
+    //Todo: Addera korrekt logik
+    public Optional<Product> getProductById(UUID uuid) {
         //Addera korrekt logik här
         return Optional.empty();
     }
@@ -50,13 +52,31 @@ public class Warehouse {
 
     //updateProductPrice(UUID, BigDecimal): when not found, throw NoSuchElementException("Product not found with id: ")
     //Also track changed products in getChangedProducts()
+    public void updateProductPrice() {
+
+    }
 
     //expiredProducts(): return List that are expired
+    public List<Perishable> expiredProducts() {
+        return List.of();
+    }
 
     //remove(UUID): remove the matching product if present
+    public void remove(UUID id) {
+
+    }
 
     //Ensure Warehouse.clearProducts() is called in tests; do not share state between tests
     public void clearProducts() {
+    }
+
+    public boolean isEmpty() {
+        return true;
+    }
+
+
+    public Map<Category, List<Product>> getProductsGroupedByCategories() {
+        return  Map.of();
     }
 }
 
