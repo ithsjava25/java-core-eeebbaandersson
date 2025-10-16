@@ -1,6 +1,7 @@
 package com.example.warehouse;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 public class ElectronicsProduct extends Product implements Shippable {
@@ -32,8 +33,15 @@ public class ElectronicsProduct extends Product implements Shippable {
     //Todo: Lägg till Shipping rule: base 79, add 49 if weight > 5.0 kg
     @Override
     public BigDecimal calculateShippingCost() {
-        //Addera logik för fraktkostnad här
-        return null;
+        BigDecimal shippingCost = new BigDecimal("79");
+        BigDecimal additionalCost = new BigDecimal("49");
+
+        if (weight.compareTo(new BigDecimal("5.0"))> 0){
+           shippingCost = shippingCost.add(additionalCost);
+
+        }
+        return shippingCost.setScale(1, RoundingMode.HALF_UP);
+
     }
 
     @Override

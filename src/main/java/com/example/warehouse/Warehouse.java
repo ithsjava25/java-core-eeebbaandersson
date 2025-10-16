@@ -1,12 +1,15 @@
 package com.example.warehouse;
 
-import java.security.Key;
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Warehouse {
     private static final Map<String, Warehouse> warehouse = new HashMap<>();
+    private final List<Product> products = new ArrayList<>();
 
     private final String name;
+
 
     private Warehouse (String name){
         this.name = name;
@@ -22,40 +25,55 @@ public class Warehouse {
                 warehouse.put(name, instance);
             }
             return instance;
+
         }
     }
 
-    //Todo: Senast skapad, se över!!
-    //addProduct(Product): throw IllegalArgumentException("Product cannot be null.") if null
+
     public void addProduct(Product product) {
         if (product == null){
-            throw new IllegalArgumentException("Product cannot be null");
+            throw new IllegalArgumentException("Product cannot be null.");
         }
+        products.add(product);
+
     }
 
-    //getProducts(): returns an unmodifiable copy
     public List<Product> getProducts() {
-        return List.of();
+        return List.copyOf(products);
     }
 
     //getProductById(UUID): return Optional
-    //Todo: Addera korrekt logik
     public Optional<Product> getProductById(UUID uuid) {
-        //Addera korrekt logik här
-        return Optional.empty();
+        List<Product> products = getProducts();
+
+         return products.stream()
+                .filter(product -> product.uuid().equals(uuid))
+                .findFirst();
+
     }
 
+    //Todo:Förstå korrekt och bygg om logiken själv!
     //shippableProducts(): return List from stored products
     public List<Shippable> shippableProducts() {
-        return List.of();
+        return products.stream()
+                .filter(product -> product instanceof Shippable)
+                .map (product ->  (Shippable) product)
+                .toList();
+
     }
 
     //updateProductPrice(UUID, BigDecimal): when not found, throw NoSuchElementException("Product not found with id: ")
     //Also track changed products in getChangedProducts()
-    public void updateProductPrice() {
+    public Map<UUID, BigDecimal> updateProductPrice() {
+
+
+        return null;
+
+
 
     }
 
+    //Todo: Returnerar just nu en tom lista!
     //expiredProducts(): return List that are expired
     public List<Perishable> expiredProducts() {
         return List.of();
@@ -63,20 +81,31 @@ public class Warehouse {
 
     //remove(UUID): remove the matching product if present
     public void remove(UUID id) {
+        products.removeIf((product ->  product.uuid().equals(id)));
+
 
     }
 
     //Ensure Warehouse.clearProducts() is called in tests; do not share state between tests
     public void clearProducts() {
+        products.clear();
+
     }
 
     public boolean isEmpty() {
         return true;
     }
 
-
+    //Todo:Se över och bygg om logiken!
     public Map<Category, List<Product>> getProductsGroupedByCategories() {
-        return  Map.of();
+        //Hämta vår lista
+        //Skapa vår stream
+        //Använd Collector, collect(), Collectors.groupingBy()
+        //Definiera vår nyckel med metodreferensen
+        //Returnera vår map
+
+        return getProducts().stream()
+                .collect(Collectors.groupingBy(Product::category));
     }
 }
 

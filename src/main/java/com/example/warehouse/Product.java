@@ -3,7 +3,6 @@ package com.example.warehouse;
 import java.math.BigDecimal;
 import java.util.UUID;
 
- //Sätta  name,category och price som final fält?
 public abstract class Product {
     private final UUID id;
     private final String name;

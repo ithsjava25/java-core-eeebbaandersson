@@ -1,6 +1,7 @@
 package com.example.warehouse;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -42,8 +43,8 @@ public class FoodProduct extends Product implements Perishable, Shippable {
     //Todo: Shipping rule: cost = weight * 50
     @Override
     public BigDecimal calculateShippingCost() {
-        //Se över fraktlogiken här!
-        return weight.multiply(BigDecimal.valueOf(50));
+        BigDecimal cost = weight.multiply(new BigDecimal("50"));
+        return cost.setScale(1, RoundingMode.HALF_UP);
 
     }
 
