@@ -59,7 +59,7 @@ public abstract class Product {
 
      //Set-metod
      public void price(BigDecimal price) {
-         if(price == null){
+         if (price == null){
              throw new IllegalArgumentException("Price must be provided.");
          }
 

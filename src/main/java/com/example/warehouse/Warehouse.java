@@ -57,17 +57,25 @@ public class Warehouse {
 
     }
 
+    //Todo: Utkommenterat pga ger fel i BasicTest, förväntas 2 arguemnt men hittar 0!
     //updateProductPrice(UUID, BigDecimal): when not found, throw NoSuchElementException("Product not found with id: ")
     public void updateProductPrice() {
 
         //Sök efter produkten
-        //Kasta undantag endast om produkten inte hittas
-        //Uppdatera priset och spåra produkten
+//        Product product = products.get(id);
+//
+//        //Kasta undantag endast om produkten inte hittas
+//        if (product == null){
+//            throw new NoSuchElementException("Product not found with id: "+ id);
+//        }
+//        //Uppdatera priset och spåra produkten
+//        product.price(newPrice);
+//        changedProducts.add(product);
 
     }
 
 
-    //Also track changed products in getChangedProducts()
+    //Track changed products in getChangedProducts()
     public List<Product> getChangedProducts() {
         return List.copyOf(changedProducts);
     }
@@ -75,8 +83,14 @@ public class Warehouse {
     //Todo: Returnerar just nu en tom lista!
     //expiredProducts(): return List that are expired
     public List<Perishable> expiredProducts() {
+         return products.values()
+                .stream()
+                .filter(product -> product instanceof Perishable)
+                .map(product -> (Perishable) product)
+                .filter(Perishable::isExpired)
+                .toList();
         
-        return List.of();
+
     }
 
     //remove(UUID): remove the matching product if present
