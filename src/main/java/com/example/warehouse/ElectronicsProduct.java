@@ -11,18 +11,28 @@ public class ElectronicsProduct extends Product implements Shippable {
     //Konstruktor som tar alla nödvändiga fält
     public ElectronicsProduct(UUID id, String name, Category category,
                               BigDecimal price, int warrantyMonths, BigDecimal weight) {
-        //Anrop till basklassens konstruktor/måste ske först!
-        super(id, name, category, price);
-        this.warrantyMonths = warrantyMonths;
-        this.weight = weight;
-        validateWarranty();
-    }
 
-    public void validateWarranty() {
-        if (warrantyMonths <= 0) {
+        //Anrop till basklassens konstruktor
+        super(id, name, category, price);
+
+        //Validerar inkommande fält
+        if (warrantyMonths < 0) {
             throw new IllegalArgumentException("Warranty months cannot be negative.");
         }
+
+        if (weight == null) {
+            throw new IllegalArgumentException("Weight must be provided.");
+        }
+
+        if (weight.compareTo(BigDecimal.ZERO) < 0){
+            throw new IllegalArgumentException("Weight cannot be negative.");
+        }
+
+        this.warrantyMonths = warrantyMonths;
+        this.weight = weight;
+
     }
+
 
     @Override
     public String productDetails() {
@@ -30,17 +40,17 @@ public class ElectronicsProduct extends Product implements Shippable {
         return "Electronics: " + productName + ", Warranty: " + this.warrantyMonths + " months";
     }
 
-    //Todo: Lägg till Shipping rule: base 79, add 49 if weight > 5.0 kg
+    //Todo: Shipping rule: base 79, add 49 if weight > 5.0 kg
     @Override
     public BigDecimal calculateShippingCost() {
-        BigDecimal shippingCost = new BigDecimal("79");
-        BigDecimal additionalCost = new BigDecimal("49");
+        BigDecimal shippingCost = new BigDecimal("79.00");
+        BigDecimal additionalCost = new BigDecimal("49.00");
 
         if (weight.compareTo(new BigDecimal("5.0"))> 0){
            shippingCost = shippingCost.add(additionalCost);
 
         }
-        return shippingCost.setScale(1, RoundingMode.HALF_UP);
+        return shippingCost.setScale(2, RoundingMode.HALF_UP);
 
     }
 

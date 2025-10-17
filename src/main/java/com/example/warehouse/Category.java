@@ -29,8 +29,6 @@ public class Category {
 
     }
 
-    //Todo: Fix --> Normalize name with initial capital letter (e.g., "fruit" -> "Fruit").
-    //Todo: Cache/flyweight: return the same instance for the same normalized name.
 
     @Override
     public boolean equals(Object o) {

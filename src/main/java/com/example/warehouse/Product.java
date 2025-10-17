@@ -11,16 +11,18 @@ public abstract class Product {
 
 
      public Product(UUID id, String name, Category category, BigDecimal price) {
-         //ID:t genereras internt
-         this.id = UUID.randomUUID();
 
-         //Validera inkommande argument först (Fail-Fast).
+         //Validera inkommande argument
          if (name == null ){
              throw new IllegalArgumentException("Product name cannot be null.");
          }
 
          if (name.isBlank()){
              throw new IllegalArgumentException("Product name cannot be blank.");
+         }
+
+         if (price == null){
+             throw new IllegalArgumentException("Price must be provided.");
          }
 
          if (price.compareTo(BigDecimal.ZERO) < 0){
@@ -32,9 +34,11 @@ public abstract class Product {
          }
 
          //Initierar fält
+         this.id = id;
          this.name = name;
          this.category = category;
          this.price = price;
+
      }
 
      public UUID uuid() {
@@ -55,10 +59,16 @@ public abstract class Product {
 
      //Set-metod
      public void price(BigDecimal price) {
+         if(price == null){
+             throw new IllegalArgumentException("Price must be provided.");
+         }
+
+         if (price.compareTo(BigDecimal.ZERO) < 0){
+             throw new IllegalArgumentException("Price cannot be negative.");
+         }
          this.price = price;
      }
 
-     //Abstrakt metod: Saknar kropp och måste implementeras!
      public abstract String productDetails();
 
  }
