@@ -89,8 +89,6 @@ public class Warehouse {
                 .map(product -> (Perishable) product)
                 .filter(Perishable::isExpired)
                 .toList();
-        
-
     }
 
     //remove(UUID): remove the matching product if present
