@@ -29,15 +29,16 @@ public class Warehouse {
 
     //Adderar en produkt
     public void addProduct(Product product) {
-        if (product == null){
+        if (product == null) {
             throw new IllegalArgumentException("Product cannot be null.");
         }
-        // Product with that id already exists
-        //should throw an exception when adding a product with a duplicate ID
-        //Addera logik för att kasta fel om produktens id redan finns
 
+        //Om en produkt med ett redan existerande id försöker läggas till, kasta exception
+        if (products.containsKey(product.uuid())) {
+            throw new IllegalArgumentException("Product with that id already exists, use updateProduct for updates.");
+        }
 
-        products.put(product.uuid(),product);
+        products.put(product.uuid(), product);
     }
 
 
