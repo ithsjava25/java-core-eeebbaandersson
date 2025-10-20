@@ -15,7 +15,7 @@ public class ElectronicsProduct extends Product implements Shippable {
         //Anrop till basklassens konstruktor
         super(id, name, category, price);
 
-        //Validerar inkommande fält
+        //Validerar inkommande argument
         if (warrantyMonths < 0) {
             throw new IllegalArgumentException("Warranty months cannot be negative.");
         }
@@ -28,6 +28,7 @@ public class ElectronicsProduct extends Product implements Shippable {
             throw new IllegalArgumentException("Weight cannot be negative.");
         }
 
+        //Initierar fält
         this.warrantyMonths = warrantyMonths;
         this.weight = weight;
 
@@ -37,7 +38,7 @@ public class ElectronicsProduct extends Product implements Shippable {
     @Override
     public String productDetails() {
         String productName = name();
-        return "Electronics: " + productName + ", Warranty: " + this.warrantyMonths + " months";
+        return "Electronics: " + productName + ", Warranty: " + warrantyMonths + " months";
     }
 
     //Todo: Shipping rule: base 79, add 49 if weight > 5.0 kg
@@ -46,7 +47,7 @@ public class ElectronicsProduct extends Product implements Shippable {
         BigDecimal shippingCost = new BigDecimal("79.00");
         BigDecimal additionalCost = new BigDecimal("49.00");
 
-        if (weight.compareTo(new BigDecimal("5.0"))> 0){
+        if (weight.compareTo(new BigDecimal("5.0")) > 0){
            shippingCost = shippingCost.add(additionalCost);
 
         }

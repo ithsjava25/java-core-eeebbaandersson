@@ -10,6 +10,7 @@ public abstract class Product {
     private BigDecimal price;
 
 
+    //Konstruktor som tar alla nödvändiga fält
      public Product(UUID id, String name, Category category, BigDecimal price) {
 
          //Validera inkommande argument
@@ -57,12 +58,11 @@ public abstract class Product {
          return price;
      }
 
-     //Set-metod
-     public void price(BigDecimal price) {
+     //Sett-metoden
+     public void setPrice(BigDecimal price) {
          if (price == null){
              throw new IllegalArgumentException("Price must be provided.");
          }
-
          if (price.compareTo(BigDecimal.ZERO) < 0){
              throw new IllegalArgumentException("Price cannot be negative.");
          }

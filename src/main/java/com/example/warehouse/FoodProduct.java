@@ -16,8 +16,7 @@ public class FoodProduct extends Product implements Perishable, Shippable {
         //Anrop till basklassens konstruktor
         super(id, name, category, price);
 
-
-        //Validera inkommande argument
+        //Validerar inkommande argument
         if (expirationDate == null){
             throw new IllegalArgumentException("Expiration date must be provided.");
         }
@@ -26,10 +25,11 @@ public class FoodProduct extends Product implements Perishable, Shippable {
             throw new IllegalArgumentException("Weight must be provided.");
         }
 
-        if(weight.compareTo(BigDecimal.ZERO) < 0){
+        if (weight.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Weight cannot be negative.");
         }
 
+        //Initierar fält
         this.expirationDate = expirationDate;
         this.weight = weight;
 

@@ -10,7 +10,6 @@ public class Category {
 
     private Category(String name) {
         this.name = name;
-
     }
 
     public static Category of(String name) {

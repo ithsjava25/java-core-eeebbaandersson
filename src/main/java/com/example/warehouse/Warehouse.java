@@ -2,10 +2,11 @@ package com.example.warehouse;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class Warehouse {
-    private static final Map<String, Warehouse> warehouse = new HashMap<>();
+    private static final Map<String, Warehouse> warehouse = new ConcurrentHashMap<>();
 
     private final Map<UUID,Product> products = new HashMap<>();
     private final Set<Product> changedProducts = new HashSet<>();
@@ -16,38 +17,40 @@ public class Warehouse {
         this.name = name;
     }
 
-    // getInstance(String name) returns the same instance per unique name
-    public static Warehouse getInstance(String name) {
-        synchronized (warehouse) {
 
-            Warehouse instance = warehouse.get(name);
-            if (instance == null) {
-                instance = new Warehouse(name);
-                warehouse.put(name, instance);
-            }
-            return instance;
-
-        }
+    public static Warehouse getInstance(){
+        return warehouse.values().stream().findFirst().get();
     }
 
+    //Returnerar Warehouse-instans(String name), om den saknas skapas en ny
+    public static Warehouse getInstance(String name) {
+            return warehouse.computeIfAbsent(name, Warehouse::new);
+    }
+
+    //Adderar en produkt
     public void addProduct(Product product) {
         if (product == null){
             throw new IllegalArgumentException("Product cannot be null.");
         }
+        // Product with that id already exists
+        //should throw an exception when adding a product with a duplicate ID
+        //Addera logik för att kasta fel om produktens id redan finns
+
+
         products.put(product.uuid(),product);
     }
 
+
+    //Returnerar en icke-modifierbar List-kopia
     public List<Product> getProducts() {
         return List.copyOf(products.values());
     }
 
-    //getProductById(UUID): return Optional
+    //Returnerar Optional
     public Optional<Product> getProductById(UUID uuid) {
         return Optional.ofNullable(products.get(uuid));
-
     }
 
-    //Todo:Förstå korrekt och bygg om logiken själv!
     //shippableProducts(): return List from stored products
     public List<Shippable> shippableProducts() {
         return products.values().stream()
@@ -57,31 +60,34 @@ public class Warehouse {
 
     }
 
-    //Todo: Utkommenterat pga ger fel i BasicTest, förväntas 2 arguemnt men hittar 0!
-    //updateProductPrice(UUID, BigDecimal): when not found, throw NoSuchElementException("Product not found with id: ")
-    public void updateProductPrice() {
+    public void updateProductPrice(UUID id, BigDecimal newPrice) {
 
-        //Sök efter produkten
-//        Product product = products.get(id);
-//
-//        //Kasta undantag endast om produkten inte hittas
-//        if (product == null){
-//            throw new NoSuchElementException("Product not found with id: "+ id);
-//        }
-//        //Uppdatera priset och spåra produkten
-//        product.price(newPrice);
-//        changedProducts.add(product);
+        //Validering av nytt pris
+        if (newPrice == null){
+            throw new IllegalArgumentException("Price cannot be null.");
+        }
 
+        //Söker efter produkten
+        Product product = products.get(id);
+
+        //Om produkten inte hittas, kasta undantaget
+        if (product == null){
+            throw new NoSuchElementException("Product not found with id: "+ id);
+        }
+
+        //Jämför gammalt mot nytt pris, har en förändring skett uppdatera priset och produkten spåras i changedProducts
+        if (product.price().compareTo(newPrice) != 0){
+            product.setPrice(newPrice);
+            changedProducts.add(product);
+        }
     }
 
-
-    //Track changed products in getChangedProducts()
+    //Spårar ändrade produkter
     public List<Product> getChangedProducts() {
         return List.copyOf(changedProducts);
     }
 
-    //Todo: Returnerar just nu en tom lista!
-    //expiredProducts(): return List that are expired
+    //Returnerar lista av utgångna produkter
     public List<Perishable> expiredProducts() {
          return products.values()
                 .stream()
@@ -91,12 +97,14 @@ public class Warehouse {
                 .toList();
     }
 
-    //remove(UUID): remove the matching product if present
+    //Tar bort en befintligt produkt om den matchar id:et
     public void remove(UUID id) {
-        products.remove(id);
+        Product removedProduct = products.remove(id);
+        if (removedProduct != null){
+            changedProducts.remove(removedProduct);
+        }
     }
 
-    //Ensure Warehouse.clearProducts() is called in tests; do not share state between tests
     public void clearProducts() {
         products.clear();
     }
@@ -105,7 +113,7 @@ public class Warehouse {
         return products.isEmpty();
     }
 
-
+    //Grupperar produkter utifrån kategorier
     public Map<Category, List<Product>> getProductsGroupedByCategories() {
         return products.values().stream()
                 .collect(Collectors.groupingBy(Product::category));
