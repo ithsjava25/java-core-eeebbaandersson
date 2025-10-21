@@ -88,16 +88,18 @@ public class Warehouse {
         return List.copyOf(changedProducts);
     }
 
+    //Todo: Fixad efter AI-feedback
     //Returnerar lista av utgångna produkter
     public List<Perishable> expiredProducts() {
-         return products.values()
+        return products.values()
                 .stream()
-                .filter(product -> product instanceof Perishable)
+                .filter(product -> product instanceof Perishable &&
+                        ((Perishable) product).isExpired())
                 .map(product -> (Perishable) product)
-                .filter(Perishable::isExpired)
-                .toList();
+                .collect(Collectors.toList());
     }
 
+    //Todo: Redan fixat men AI-boten klagar ändå?
     //Tar bort en befintligt produkt om den matchar id:et
     public void remove(UUID id) {
         Product removedProduct = products.remove(id);
