@@ -47,12 +47,10 @@ public class FoodProduct extends Product implements Perishable, Shippable {
         return "Food: " + productName + ", Expires: " + expirationDate;
     }
 
-
     @Override
     public BigDecimal calculateShippingCost() {
         BigDecimal cost = weight.multiply(new BigDecimal("50"));
         return cost.setScale(2, RoundingMode.HALF_UP);
-
     }
 
     @Override

@@ -41,7 +41,6 @@ public class ElectronicsProduct extends Product implements Shippable {
         return "Electronics: " + productName + ", Warranty: " + warrantyMonths + " months";
     }
 
-
     @Override
     public BigDecimal calculateShippingCost() {
         BigDecimal shippingCost = new BigDecimal("79.00");

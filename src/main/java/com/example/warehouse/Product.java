@@ -9,7 +9,6 @@ public abstract class Product {
     private final Category category;
     private BigDecimal price;
 
-
     //Konstruktor som tar alla nödvändiga fält
      public Product(UUID id, String name, Category category, BigDecimal price) {
 
@@ -39,7 +38,6 @@ public abstract class Product {
          this.name = name;
          this.category = category;
          this.price = price;
-
      }
 
      public UUID uuid() {
@@ -58,7 +56,6 @@ public abstract class Product {
          return price;
      }
 
-     //Sett-metoden
      public void setPrice(BigDecimal price) {
          if (price == null){
              throw new IllegalArgumentException("Price must be provided.");
@@ -70,7 +67,6 @@ public abstract class Product {
      }
 
      public abstract String productDetails();
-
  }
 
 
