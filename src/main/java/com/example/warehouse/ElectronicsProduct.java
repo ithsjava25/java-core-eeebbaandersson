@@ -41,7 +41,7 @@ public class ElectronicsProduct extends Product implements Shippable {
         return "Electronics: " + productName + ", Warranty: " + warrantyMonths + " months";
     }
 
-    //Todo: Shipping rule: base 79, add 49 if weight > 5.0 kg
+
     @Override
     public BigDecimal calculateShippingCost() {
         BigDecimal shippingCost = new BigDecimal("79.00");

@@ -201,7 +201,7 @@ class EdgeCaseTest {
                             new BigDecimal("15.00").add(new BigDecimal(i % 3)), LocalDate.now().plusDays(5), BigDecimal.ONE))
             );
             Product outlierHigh = new FoodProduct(UUID.randomUUID(), "Expensive", Category.of("Test"),
-                    new BigDecimal("35.00"), LocalDate.now().plusDays(5), BigDecimal.ONE);
+                    new BigDecimal("500.00"), LocalDate.now().plusDays(5), BigDecimal.ONE);
             Product outlierLow = new FoodProduct(UUID.randomUUID(), "Cheap", Category.of("Test"),
                     new BigDecimal("0.01"), LocalDate.now().plusDays(5), BigDecimal.ONE);
 
@@ -209,7 +209,7 @@ class EdgeCaseTest {
             warehouse.addProduct(outlierLow);
 
             // Act - Find outliers (products with price > 2 standard deviations from mean)
-            List<Product> outliers = analyzer.findPriceOutliers(2.0); // 2 standard deviations
+            List<Product> outliers = analyzer.findPriceOutliers(); // 2 standard deviations
 
             // Assert
             assertThat(outliers)

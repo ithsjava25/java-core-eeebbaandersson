@@ -28,7 +28,6 @@ public class Category {
 
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Category category)) return false;

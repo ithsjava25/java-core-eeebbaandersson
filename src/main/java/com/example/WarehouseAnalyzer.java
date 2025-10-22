@@ -164,7 +164,92 @@ class WarehouseAnalyzer {
         }
         return outliers;
     }
-    
+
+    public List<Product> findPriceOutliers(){
+        var products = warehouse.getProducts();
+        //Hämtar produktpriser, sorteras i stigande ordning och sparas i ny lista sortedPrices
+        var sortedPrices = products.stream()
+                .map(Product::price)
+                .sorted()
+                .toList();
+
+        //Listans storlek
+        int N = sortedPrices.size();
+
+        //Hantera fallet om listan är tom/har för få värden
+        if (N == 0){
+            System.out.println("No prices found.");
+            return  List.of();
+        }
+
+        //Q1 -->Medianen nedre halvan
+        int N_lower = N/2;
+        BigDecimal Q1;
+
+        if (N_lower %2 != 0){
+            //Udda storlek på halvan, Q1 = enskilt element
+            int indexQ1 = N_lower / 2;
+            Q1 = sortedPrices.get(indexQ1);
+        } else {
+            //Jämn storlek på halvan, Q1 blir medelvärdet av 2 element
+            int index1 = N_lower/2-1;
+            int index2 = N_lower/2;
+
+            BigDecimal sum = sortedPrices.get(index1).add(sortedPrices.get(index2));
+            Q1 = sum.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        }
+
+        //Q3 --> Medianen övre halvan
+        int start_uper;
+        //Hittar startindex för övre halvan
+        if(N % 2!= 0){
+            //Udda fall, excludera medianen (N/2), start vid N/2 +1
+            start_uper = N/2 +1;
+        } else {
+            //Jämt fall, Övre halvan börjar efter första N/2 elementen
+            start_uper = N/2;
+        }
+
+        BigDecimal Q3;
+        if (N_lower % 2 != 0){
+            //Udda storlek på halvan, Q3 = enskilt element
+            int indexQ3 = start_uper + N_lower / 2;
+            Q3 = sortedPrices.get(indexQ3);
+        } else {
+            //Jämn storlek på halvan, Q3 blir medelvärdet av 2 element
+            int index1 = start_uper + (N_lower / 2) -1;
+            int index2 = start_uper + N_lower / 2;
+
+            BigDecimal sum = sortedPrices.get(index1).add(sortedPrices.get(index2));
+            Q3 = sum.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        }
+
+        //Beräknar IQR
+        BigDecimal IQR = Q3.subtract(Q1);
+
+        //Outlier Gräns
+        BigDecimal Fence = IQR.multiply(BigDecimal.valueOf(1.5));
+
+
+        BigDecimal lowerFence = Q1.subtract(Fence);
+        BigDecimal upperFence = Q3.add(Fence);
+
+        var outliers = products.stream()
+                .filter(product -> {
+                    BigDecimal price = product.price();
+
+
+                    //Jämför priset med gränserna
+                    boolean isLowerOutliers = price.compareTo(lowerFence) < 0;
+                    boolean isUpperOutliers = price.compareTo(upperFence) > 0;
+
+                    return isLowerOutliers || isUpperOutliers;
+                })
+                .toList();
+
+        return outliers;
+    }
+
     /**
      * Groups all shippable products into ShippingGroup buckets such that each group's total weight
      * does not exceed the provided maximum. The goal is to minimize the number of groups and/or total
