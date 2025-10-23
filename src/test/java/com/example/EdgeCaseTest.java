@@ -189,9 +189,9 @@ class EdgeCaseTest {
         @Test
         @DisplayName("📊 should identify products with abnormal pricing (outliers)")
         /**
-         * Detects price outliers using mean and standard deviation.
+         * Detects price outliers using the InterQuartile Range method.
          * Arrange: mostly normal-priced items around 15, plus very cheap and very expensive outliers.
-         * Act: analyzer.findPriceOutliers(2.0).
+         * Act: analyzer.findPriceOutliers().
          * Assert: returns exactly the two outliers ("Expensive" and "Cheap").
          */
         void should_identifyPriceOutliers_usingStatistics() {
@@ -208,12 +208,13 @@ class EdgeCaseTest {
             warehouse.addProduct(outlierHigh);
             warehouse.addProduct(outlierLow);
 
-            // Act - Find outliers (products with price > 2 standard deviations from mean)
-            List<Product> outliers = analyzer.findPriceOutliers(); // 2 standard deviations
+            // Act - Find outliers (products outside the range of IQR algorithm)
+            List<Product> outliers = analyzer.findPriceOutliers();
 
             // Assert
             assertThat(outliers)
-                    .as("Should identify statistical outliers beyond 2 standard deviations")
+                    .as("Should identify outliers by finding the range between the first quartile (Q1) and the third quartile (Q3)." +
+                            "by using the IQR (InterQuartile Range) method")
                     .hasSize(2)
                     .extracting(Product::name)
                     .containsExactlyInAnyOrder("Expensive", "Cheap");

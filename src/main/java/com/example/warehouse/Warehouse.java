@@ -82,7 +82,7 @@ public class Warehouse {
     }
 
     //Spårar ändrade produkter
-    public List<Product> ChangedProducts() {
+    public List<Product> getChangedProducts() {
         return List.copyOf(changedProducts);
     }
 
@@ -106,8 +106,6 @@ public class Warehouse {
 
     public void clearProducts() {
         products.clear();
-        changedProducts.clear();
-
     }
 
     public boolean isEmpty() {
