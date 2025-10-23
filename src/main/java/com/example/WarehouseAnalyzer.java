@@ -1,7 +1,7 @@
 package com.example;
 
+import com.example.warehouse.*;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
@@ -138,33 +138,102 @@ class WarehouseAnalyzer {
     }
     
     /**
-     * Identifies products whose price deviates from the mean by more than the specified
-     * number of standard deviations. Uses population standard deviation over all products.
-     * Test expectation: with a mostly tight cluster and two extremes, calling with 2.0 returns the two extremes.
-     *
-     * @param standardDeviations threshold in standard deviations (e.g., 2.0)
+     * Uses the IQR method to identify products considered outliers.
      * @return list of products considered outliers
      */
-    public List<Product> findPriceOutliers(double standardDeviations) {
-        List<Product> products = warehouse.getProducts();
-        int n = products.size();
-        if (n == 0) return List.of();
-        double sum = products.stream().map(Product::price).mapToDouble(bd -> bd.doubleValue()).sum();
-        double mean = sum / n;
-        double variance = products.stream()
+    public List<Product> findPriceOutliers(){
+        var products = warehouse.getProducts();
+
+        //Samlar in och sortera priserna, sparas i sortedPrices
+        var sortedPrices = products.stream()
                 .map(Product::price)
-                .mapToDouble(bd -> Math.pow(bd.doubleValue() - mean, 2))
-                .sum() / n;
-        double std = Math.sqrt(variance);
-        double threshold = standardDeviations * std;
-        List<Product> outliers = new ArrayList<>();
-        for (Product p : products) {
-            double diff = Math.abs(p.price().doubleValue() - mean);
-            if (diff > threshold) outliers.add(p);
+                .sorted()
+                .toList();
+
+        //N = Listans totala storlek
+        int N = sortedPrices.size();
+
+        //Hantera fallet om listan är tom, ge felmeddelande och retunrera en tom lista
+        if (N == 0){
+            System.out.println("No prices found.");
+            return  List.of();
         }
-        return outliers;
+
+        //Beräknar Q1 (Medianen nedre halvan)
+        //N-lower = storleken på nedre halvan
+        int N_lower = N/2;
+        BigDecimal Q1;
+
+        if (N_lower %2 != 0){
+            //Udda storlek på halvan, Q1 = mittersta elementet
+            int indexQ1 = N_lower / 2;
+            Q1 = sortedPrices.get(indexQ1);
+        } else {
+            //Jämn storlek på halvan, Q1 = medelvärdet av de två mittersta elementen
+            int index1 = N_lower/2-1;
+            int index2 = N_lower/2;
+
+            BigDecimal sum = sortedPrices.get(index1).add(sortedPrices.get(index2));
+            //Beräknar medelvärdet och rundar av
+            Q1 = sum.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        }
+
+        //Beräknar Q3 (Medianen övre halvan)
+
+
+        //start_upper = definierar startindexet för övre halvan
+        int start_uper;
+
+        //Hittar startindex för övre halvan
+        if (N % 2!= 0){
+            //Udda fall, excludera medianen (N/2), start vid N/2 +1
+            start_uper = N/2 +1;
+        } else {
+            //Jämt fall, Övre halvan börjar efter första N/2 elementen
+            start_uper = N/2;
+        }
+
+        BigDecimal Q3;
+        // Storleken på den övre halvan är samma som den nedre halvan (N_lower).
+        if (N_lower % 2 != 0){
+            //Udda storlek på halvan, Q3 = mittersta elementet
+            int indexQ3 = start_uper + N_lower / 2;
+            Q3 = sortedPrices.get(indexQ3);
+        } else {
+            //Jämn storlek på halvan, Q3 = medelvärdet av de två mittersta elementen
+            int index1 = start_uper + (N_lower / 2) -1;
+            int index2 = start_uper + N_lower / 2;
+
+            BigDecimal sum = sortedPrices.get(index1).add(sortedPrices.get(index2));
+            //Beräknar medelvärdet och rundar av
+            Q3 = sum.divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP);
+        }
+
+        //Beräknar IQR (avståndet mellan Q3 och Q1)
+        BigDecimal IQR = Q3.subtract(Q1);
+
+        //IQR-faktor: 1.5 * IQR, används för att definiera vår gräns (Fence)
+        BigDecimal Fence = IQR.multiply(BigDecimal.valueOf(1.5));
+
+        //Beräknar nedre/övre gränsen för outliers
+        BigDecimal lowerFence = Q1.subtract(Fence);
+        BigDecimal upperFence = Q3.add(Fence);
+
+        //Filtrerar igenom alla ursprungliga produkter
+        return products.stream()
+                .filter(product -> {
+                    BigDecimal price = product.price();
+
+                    //Jämför priset med gränserna
+                    boolean isLowerOutliers = price.compareTo(lowerFence) < 0;
+                    boolean isUpperOutliers = price.compareTo(upperFence) > 0;
+
+                    //Retunrera produkten som är en lägre eller högre oulier
+                    return isLowerOutliers || isUpperOutliers;
+                })
+                .toList();
     }
-    
+
     /**
      * Groups all shippable products into ShippingGroup buckets such that each group's total weight
      * does not exceed the provided maximum. The goal is to minimize the number of groups and/or total
